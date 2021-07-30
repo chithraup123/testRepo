@@ -1,4 +1,7 @@
-
+---
+title : "product"
+description : "product"
+---
 ## Product
 
 - Product page comprises the detailed  information including all the supporting attributes of the product.

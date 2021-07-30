@@ -1,7 +1,4 @@
----
-title : "application"
-description : "application"
----
+
 ## Rocket Margin
 
 Rocket Margin is an E-Commerce solution provider which offers a  personalized and seamless selling experience across various sales channels. It connects digital, in-store, and back-office operations on a truly unified commerce platform.

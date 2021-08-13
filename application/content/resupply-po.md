@@ -113,7 +113,7 @@ The screen has the following fields in addition to the model, product, and title
     The total time taken to manufacture the product and then deliver it to the seller
 - Order Qty Rounded by Carton Size
     Order now quantity can be rounded as per the Carton size by selecting the check box provided at the top of the grid as given in the below image.
-    ![My image](./images/resupply-po.png " ")
+    ![My image](../images/resupply-po.png " ")
     When checking the option to view the rounded value, the new value will be equal to Cartons US * Eaches P Carton
 - Show only SKUs needing re-order
     To view only the products which have to be purchased again ie products with 'Order Now' >0

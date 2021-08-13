@@ -206,7 +206,7 @@
 
 - While creating an FC shipment through the pop up two buttons are available , one button is to create FC for those SKUs which have been uploaded as file through the button.
 
-- The next button is All open SKU and this will permits to create FC for those SKUs which have been successfully imported from the manufacturer. The button click on the above said two buttons will results in the creation of new FC by redirecting the control to FC window.
+- The next button is All open SKU and this will permits to create FC with the incompleted SKUs from the respective PO. The button click on the above said two buttons will results in the creation of new FC by redirecting the control to FC window.
 
 ![](https://i.ibb.co/JkQh6Zd/FCpopup.jpg)
 

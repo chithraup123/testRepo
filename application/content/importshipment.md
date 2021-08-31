@@ -100,10 +100,13 @@ Two types of manufacturing costs are available for a product
     Price Per Unit from the source PO
 2. IS Manufacturing Cost
 
-    This is the cost after applying the pegged rate when currency fluctuations occur
+    This is the cost after applying the pegged rate when currency fluctuations occur. To get the IS Manufacturing cost we need to click on 'Apply Conversion' and save IS
+
+![My image](../images/apply-conversion.png " ")
 
     ```sh
     SKU's IS.Manufacturing Cost = (IS.SKU's PO.Manufacturing Cost*Pegged rate) * ( 1/Current rate)
+
     If Manufacturer has given any discount then apply the discount and find the new manufacturing cost
     SKU's IS.Manufacturing Cost = SKU's IS.Manufacturing Cost - (SKU's IS.Manufacturing Cost * discount %)
     ```

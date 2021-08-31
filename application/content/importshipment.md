@@ -40,8 +40,13 @@ We can add sku as one by one by clicking on 'Add SKU' button. See the button in 
  - Model and SKU are the product details created in that PO
  - Number of Cartons is the required number of cartons to ship the product from manufacturer country to the seller's country
  - Total Eaches is the number of units of product shipping in the shipment
- - Eaches Per Carton is autofilled field ie Total Eaches/Number of Cartons
- - HTS Code also called as Tariff code which is a predefined set of codes based on the source and target country of a product. If this code is saved on the sku details page then HTS Code will automatically get set in the IS page. Else we need to select it
+ - Eaches Per Carton is an auto-filled field ie Total Eaches/Number of Cartons and it should be always an integer value. If this value differs from the previous import shipment then there will be a warning symbol will be displayed for notifying the user. See the screenshot below
+
+![My image](../images/eaches-per-carton.png " ")
+	
+	
+ - HTS Code also called as Tariff code which is a predefined set of codes based on the source and target country of a product. If this code is saved on the sku details page then HTS Code will automatically gets set in the IS page. Else we need to select it from this drop down
+
  - Tariff Per Each and Total Tariff are the tariff cost of the product based on the selected tariff code
     ```sh
     Tariff Per Unit = Manufacture Price * Tariff rate %
@@ -49,9 +54,13 @@ We can add sku as one by one by clicking on 'Add SKU' button. See the button in 
     ```
 2. Using 'Upload SKU'
 
-The above option will be helpful when the number of prducts are very less. There is an option in the IS page to upload the SKU file after filling the SKU information in the template file we are provided. The template can be downloaded from UI itself by 'Download Template' button.
+The previous option will be helpful when the number of prducts are very less. There is an option in the IS page to upload the SKU file after filling the SKU information in the template file we are provided. The template can be downloaded from UI itself by 'Download Template' button.
 
 ![My image](../images/upload-sku.jpeg " ")
+
+3. Using 'Upload SKUs from PO master list'
+
+It is an option to upload SKUs directly using the file, 'PO by SKU Master List'. Download the file from PO list page, fill the necessary information for only the SKUs which are to be created in IS page and upload using this button
 
 
 ###### SKU level actions
@@ -125,6 +134,10 @@ Cost of warehouse preparation cost for the inventory attached to the IS directly
 ```sh
 Per Each WH InvoiceCost = SUM (Per Unit 3PL Invoice Cost of IS.SKU + Per Unit 3PL Invoice Cost of SIG.SKU + Per Unit 3PL Invoice Cost of FC.SKU)
 ```
+See the following screenshot where we can see all the above mentioned costs
+
+![My image](../images/per-each-costs.png " ")
+
 **Storage Estimate**
 
 Shows the estimated number of pallets required to store the products in the IS

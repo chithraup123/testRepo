@@ -27,7 +27,12 @@ SKU can be given inside the container if the product is shipped in a container o
 ![My image](../images/add-container.png " ")
 
 ###### How to add a product into an IS
-product can be added by clicking on 'Add SKU' button. Add SKU pop asks for following details
+
+To add the product details of an import shipment. Products can be added by following different ways
+
+1. Using 'Add SKU' from UI
+ 
+We can add sku as one by one by clicking on 'Add SKU' button. See the button in the following screenshot 
 
 ![My image](../images/add-sku.png " ")
 
@@ -42,10 +47,15 @@ product can be added by clicking on 'Add SKU' button. Add SKU pop asks for follo
     Tariff Per Unit = Manufacture Price * Tariff rate %
     Total Tariff = Tariff Per Unit * Total Unit Quantity
     ```
-###### SKU level actions
-Once the SKU is added in to an IS, the folllowing actons are possible
+2. Using 'Upload SKU'
 
-![My image](../images/sku-actions.jpg " ")
+The above option will be helpful when the number of prducts are very less. There is an option in the IS page to upload the SKU file after filling the SKU information in the template file we are provided. The template can be downloaded from UI itself by 'Download Template' button.
+
+![My image](../images/upload-sku.jpeg " ")
+
+
+###### SKU level actions
+Once the SKU is added into an IS, the folllowing actons are possible
 
 1. Edit SKU where product details can be edited
 2. Reassign SKU, products container can be reassigned to another container
@@ -58,8 +68,6 @@ If the product is created outside the container/uncategorized then there will be
 ###### Container level actions
 After creating one container and product information under the container we can do the following actions
 
-![My image](../images/container-actions.jpg " ")
-
 1. Edit Container, edit the container id/container type/manufacturer shipping cost
 2. Delete Container, Delete Container will ask us whether we want to delete the container as whole ie including all products of that container or delete only the container not products. In the second case the products be moved under Uncategorized section
 3. Create Storage Inventory Group, option to create the storage inventory group directly from IS page. The SIG contains the product details which are directly moved to a particular warehouse from the container which is shipped to the target country. It is not allowed to create multiple SIGs from a container. Once the SIG is created then navigation link to that SIG will be shown here. The following are the SKU level fields which will get effected when a SIG is created from a container
@@ -70,21 +78,30 @@ After creating one container and product information under the container we can 
     c) Unallocated Qty
         The remaining quantity of product in the IS after creating the SIG/FC for a product
 
+![My image](../images/sku-actions.jpg " ")
+
 All the above quantity are shown in the 'Carton - Number of Eaches' format on the UI
 
 **Manufacturing Cost for the product**
+
 Two types of manufacturing costs are available for a product
+
 1. PO Manufacturing Cost
+
     Price Per Unit from the source PO
 2. IS Manufacturing Cost
+
     This is the cost after applying the pegged rate when currency fluctuations occur
+
     ```sh
     SKU's IS.Manufacturing Cost = (IS.SKU's PO.Manufacturing Cost*Pegged rate) * ( 1/Current rate)
     If Manufacturer has given any discount then apply the discount and find the new manufacturing cost
     SKU's IS.Manufacturing Cost = SKU's IS.Manufacturing Cost - (SKU's IS.Manufacturing Cost * discount %)
     ```
 **Import Cost**
+
 The cost of the product while shipping from manufacturer country to the country where the product is going to be sold which includes the cost comes under the invoices of types such as 'Forwarder', 'Clearing agent', 'Duty payment' and 'Other' after deducting the tariff cost. The total import cost will be calculated and distributed to SKU level based on the product's master carton dimensions.
+
 ```sh
 Total Cost = [Invoice Cost + Manufacturer Shipping Cost - Tariff Cost (If 'Deduct Tariff Costs is checked)]
 
@@ -95,17 +112,21 @@ SKU1's Total Carton CBM % = SKU1's Total Carton CBM / (SKU1's Total Carton CBM +
 Tot IS Ship Cost for SKU1 = Total Cost * SKU1's Total Carton CBM %
 ```
 **Cost of FC Shipment**
+
 The cost of inventory of a product shipped from the IS to the FC. The cost includes cost of direct shipment from IS to the FC and cost of indirect shipment ie from IS to the warehouse and then to the FC. In the first case the 'Qty Shipped Direct to the FC's will also get updated.
+
 ```sh
 (IS.FC.SKU.ShipCost+IS.SIG.FC.ShipCost) / SUM(Total Eaches)
 ```
 
 **Warehouse Invoice Cost**
+
 Cost of warehouse preparation cost for the inventory attached to the IS directly or indirectly. Need to consider all WHInvoice cost for an SKU in that IS connected directly or indirectly
 ```sh
 Per Each WH InvoiceCost = SUM (Per Unit 3PL Invoice Cost of IS.SKU + Per Unit 3PL Invoice Cost of SIG.SKU + Per Unit 3PL Invoice Cost of FC.SKU)
 ```
 **Storage Estimate**
+
 Shows the estimated number of pallets required to store the products in the IS
 ```sh
 Cubic Ft = SKU's Master Carton Length* Master Carton Height* Master Carton Width/1728 * No of Cartons
@@ -113,14 +134,22 @@ Estimated Pallets  = Cubic Ft / (40 * 48 * Max Pallet Height /1728) ---> rounds 
 'Max Pallet Height'  should be configurable from 'Prep Center /Warehouse' and Settings-->General
 ```
 **Mass Adjust Tariff**
+
 The Tariff can be calculated while uploading Mass Adjust file in the following steps
+
 1. Download Template
+
 Using this template, we can give the inputs for calculating tariff for the given SKU. The SKU/Model number can be given as an Identifier
+
 2. Upload Adjustment File
+
 The SKU with the values given in the file will get filled in the UI. The values get filled only if those SKUs are already present in the UI
 
 **View Total Tariff By HTS Code**
-Helps to view the tariff cost based on the HTS code used in the import shipment. This view contains 6 columns such as HTS code, Tariff %, Total Reported Value, Tariff Costs, MPF(Merchandise Processing Fee), HMF(Harbor Maintenance Fee) and Total Tariff Costs
+
+Helps to view the tariff cost based on the HTS code used in the import shipment. 
+This view contains 6 columns such as HTS code, Tariff %, Total Reported Value, Tariff Costs, MPF(Merchandise Processing Fee), HMF(Harbor Maintenance Fee) and Total Tariff Costs
+
 Tariff % is based on the Tariff code ie The latest Tariff code modified before the Inventory-->ETA
 ```sh
 Tariff Costs = Sum of Tariff Costs for a HTS code(Tariff Cost for single SKU row = Total Reported Value * Tariff %)
@@ -150,9 +179,11 @@ Following are the different scenarios for calculating Total Tariff and Reported 
 Note: In either of the above case the HTS code should be same for all the repeated SKUs/Model Number. Else the Error message should be displayed to the user
 
 **Export IS Document**
-The SKU details of an import shipment can be exported as a document which contains all SKUs and all the fields with its values comes in the SKU row
+
+The SKU details of an import shipment can be exported as a document which contains all SKUs and all the fields with the values comes in the SKU row
 
 **Cost Detail**
+
 The cost details of the Import Shipment can be exported as a document/report
 The report contains top rows such as
 1. Pegged Rate
@@ -181,7 +212,9 @@ Summary rows are,
 2. Grand Total  = Cost After Discount + Manufacturers Shipping Cost
 
 **Create Warehouse/3PL Invoice**
+
 Warehouse preparation cost be added from IS using this button which navigates the user directly to the Warehouse/3PL Invoice page
 
 **Create WH Import File**
+
 Helps to create a document of list of SKUs to send to a particular warehouse based on the selected warehouses template. By default the warehouse selected in the popup will be the same given in the import shipment page

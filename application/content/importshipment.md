@@ -1,125 +1,187 @@
-# Import Shipments
+## Import Shiments
+Import Shipments screen helps the user to capture all the details when the products are imported from manufacturer country to the target country where the products are going to be sold.
+We can add the documents, invoices, and all the product details related to a particular shipment in Import Shipments UI
+###### Adding Documents
+Documents can be added by providing the 'Document Type' first and then browse the document. Follwoing are the different types of documents which can be added in IS page
+1. BOL(bill of lading)
+2. Commercial Invoice
+3. ISF1(Importer Security Filing)
+4. ISF2
+5. Local Charges
+6. Packing List
+7. Tariff Docs
+8. Other
+Maximum of one file can be uploded for all types of docs. If the file is of type 'Other' then the type can be specified in 'Other Value'
 
-The page deals with the shipment of the inventory from the manufacturer. It covers all the intermediate stage details.
+Invoices for an import shipment can be listed under Invoice Details and the system shows these cost in sku level. Following types of invoices can be added in the IS page
+1. Forwarder
+2. Warehouse 3PL
+3. Clearing Agent
+4. Duty Payment
+5. Other
 
-   Below image shows the table representation
+SKU Details
+All the products and how much qty are shipping in the container for this shipment for each product, details like this can be given under SKU details
+SKU can be given inside the container if the product is shipped in a container or SKU can be given without a container. Container details can be given by 'Add Container' option where the container id, type and the manufacturer shipping cost for the products in that container can be given
 
-  ![](https://i.ibb.co/qBtybhN/importhme.png)
+![My image](../images/add-container.png " ")
 
-- The  top region of the window comprises of drop down text field  for sku to hold the sku value and this drop down is repurposed with the sku values which have been entered in product window.
+###### How to add a product into an IS
+product can be added by clicking on 'Add SKU' button. Add SKU pop asks for following details
 
-- Model text field takes the model number of the product from the drop down list which is repurposed with the product values which have been entered in product window.
+![My image](../images/add-sku.png " ")
 
-- Invoice Number text field give the provision to enter the invoice number which represents the invoice created for recording the Import Shipment(IS) related expenses and Container Id text field will take the container Id of the product which is created in the import shipment window during the creation of a new Import Shipment(IS).
+ - Container id can be selected if product is shipping via container. Purchase Order is the id of purchase order created before from which the inventory is shipped
+ - Model and SKU are the product details created in that PO
+ - Number of Cartons is the required number of cartons to ship the product from manufacturer country to the seller's country
+ - Total Eaches is the number of units of product shipping in the shipment
+ - Eaches Per Carton is autofilled field ie Total Eaches/Number of Cartons
+ - HTS Code also called as Tariff code which is a predefined set of codes based on the source and target country of a product. If this code is saved on the sku details page then HTS Code will automatically get set in the IS page. Else we need to select it
+ - Tariff Per Each and Total Tariff are the tariff cost of the product based on the selected tariff code
+    ```sh
+    Tariff Per Unit = Manufacture Price * Tariff rate %
+    Total Tariff = Tariff Per Unit * Total Unit Quantity
+    ```
+###### SKU level actions
+Once the SKU is added in to an IS, the folllowing actons are possible
 
-- These four text fields are filters which are used to filter out the contents of the table.To the extreme top right end one check box is placed to filter the completed ISs.
+![My image](../images/sku-actions.jpg " ")
 
-  The above said filter text fields and check box displayed below
+1. Edit SKU where product details can be edited
+2. Reassign SKU, products container can be reassigned to another container
+3. Delete SKU, product can be removed from IS
 
-  ![](https://i.ibb.co/CzrbJZ6/import-shipmentfilterfleds.png)
+If the product is created outside the container/uncategorized then there will be 'Assign' option to assign to an existing container instead of Reassign option as seen below
 
+![My image](../images/assign-sku.jpg " ")
 
+###### Container level actions
+After creating one container and product information under the container we can do the following actions
 
-- Below to this text fields the import shipment table is displayed which  is listed with various import shipments related details. Table comprises the following fields.
+![My image](../images/container-actions.jpg " ")
 
-- A general  Id and SIG Id indicates the starting attributes of the table uniquely identifies the storage inventory group of the warehouse to which the imported products stored.
+1. Edit Container, edit the container id/container type/manufacturer shipping cost
+2. Delete Container, Delete Container will ask us whether we want to delete the container as whole ie including all products of that container or delete only the container not products. In the second case the products be moved under Uncategorized section
+3. Create Storage Inventory Group, option to create the storage inventory group directly from IS page. The SIG contains the product details which are directly moved to a particular warehouse from the container which is shipped to the target country. It is not allowed to create multiple SIGs from a container. Once the SIG is created then navigation link to that SIG will be shown here. The following are the SKU level fields which will get effected when a SIG is created from a container
+    a) Initial Storage Quantity
+        The quantity of the product in the warehouse when it is moved for storage
+    b) Current WH Storage Qty
+        The current quantity of product in the warehouse. This value gets decreased each time a fulfillment is created from the SIG
+    c) Unallocated Qty
+        The remaining quantity of product in the IS after creating the SIG/FC for a product
 
-- Forwarders field holds the name of the agency or company that organizes shipments for customers to get goods from the manufacturer to a market.
+All the above quantity are shown in the 'Carton - Number of Eaches' format on the UI
 
-- Clearing agent field is a country dependent value which is introduced by the authorities relevant for the shipment of the goods.
+**Manufacturing Cost for the product**
+Two types of manufacturing costs are available for a product
+1. PO Manufacturing Cost
+    Price Per Unit from the source PO
+2. IS Manufacturing Cost
+    This is the cost after applying the pegged rate when currency fluctuations occur
+    ```sh
+    SKU's IS.Manufacturing Cost = (IS.SKU's PO.Manufacturing Cost*Pegged rate) * ( 1/Current rate)
+    If Manufacturer has given any discount then apply the discount and find the new manufacturing cost
+    SKU's IS.Manufacturing Cost = SKU's IS.Manufacturing Cost - (SKU's IS.Manufacturing Cost * discount %)
+    ```
+**Import Cost**
+The cost of the product while shipping from manufacturer country to the country where the product is going to be sold which includes the cost comes under the invoices of types such as 'Forwarder', 'Clearing agent', 'Duty payment' and 'Other' after deducting the tariff cost. The total import cost will be calculated and distributed to SKU level based on the product's master carton dimensions.
+```sh
+Total Cost = [Invoice Cost + Manufacturer Shipping Cost - Tariff Cost (If 'Deduct Tariff Costs is checked)]
 
-- Warehouse/Third Party Logistics(3PL) column will keep the  name of warehouse or the name of third-party agency to which the goods are stored in storage inventory group window.
-
-- Supplier/Manufacturer Name is the manufacturer of PO listed in the IS details page. If multiple manufactures comes in one IS then take the manufacturer of first PO
-
-- HBL field holds the house bill of lading identifier and this field will helps to filter out the acknowledgment issued to the manufacturer once the cargo has been received at the customer side.
-
-- Estimated Time of Arrival field will keep the estimated date of arrival of the goods to the customer.
-
-- Released and the paid status column will displays the status of the shipment and payment status respectively. If Released flag is set, Paid status will be set automatically. Still the paid status can be edited manually.
-
-- To the extreme right end of the table the last field represents various actions like view,edit,delete to be performed on the table values.
-
-- Click on Edit button will redirect to the Import Shipment Details page that covers all the minute level details regarding the Import shipment of goods.
-
- The above said fields are pictorially shown here
-
-![](https://i.ibb.co/sQVXxRj/IS-headers.jpg)
-
-- The click on the plus button which have placed on the top right corner redirect to the Add new Import shipments window.
-
-# Add New Import Shipments
-
-- In the top region four drop down text fields are arranged.The Market region mandatory field will select the market region from which the products are imported.
-
-- Warehouse drop down selects the name of warehouse in which the imported products are stored.
-
-- Clearing agent and the Forwarders drop down selects intermediate agencies who take care the shipment procedures.
-
-- Below to this top region one drop down list is given to select the document type of the file which is chosen from the browse button placed nearby the document type drop down.
-
-- If more than one document to be uploaded then this segment can be replicated by making use of a plus button on the boundary of the region.
-
-- The bottom region of the window includes a House Bill Lading(HBL) text field that takes a value that represents the  acknowledgment of the receipt of product that are to be shipped.
-
-- Estimated time of Arrival field select a date on which the arrival of the product is expected.
-
-- Total CBM no editable text field receives the total volume of the products which is to be shipped.
-Total CBM calculation is,
+Calculate Per Each Import Cost based on SKU CBM and Total Eaches as follows,
 SKU1's CBM = MasterCartonLength(meter) * MasterCartonHeight(meter) * MasterCartonWidth(meter)
 SKU1's Total Carton CBM = SKU1's CBM * No of Cartons
-Total CBM  = Sum of all SKUs Total Carton CBM
+SKU1's Total Carton CBM % = SKU1's Total Carton CBM / (SKU1's Total Carton CBM + SKU2's Total Carton CBM)
+Tot IS Ship Cost for SKU1 = Total Cost * SKU1's Total Carton CBM %
+```
+**Cost of FC Shipment**
+The cost of inventory of a product shipped from the IS to the FC. The cost includes cost of direct shipment from IS to the FC and cost of indirect shipment ie from IS to the warehouse and then to the FC. In the first case the 'Qty Shipped Direct to the FC's will also get updated.
+```sh
+(IS.FC.SKU.ShipCost+IS.SIG.FC.ShipCost) / SUM(Total Eaches)
+```
 
-![](https://i.ibb.co/VMzf17X/IS-add-one.jpg)
+**Warehouse Invoice Cost**
+Cost of warehouse preparation cost for the inventory attached to the IS directly or indirectly. Need to consider all WHInvoice cost for an SKU in that IS connected directly or indirectly
+```sh
+Per Each WH InvoiceCost = SUM (Per Unit 3PL Invoice Cost of IS.SKU + Per Unit 3PL Invoice Cost of SIG.SKU + Per Unit 3PL Invoice Cost of FC.SKU)
+```
+**Storage Estimate**
+Shows the estimated number of pallets required to store the products in the IS
+```sh
+Cubic Ft = SKU's Master Carton Length* Master Carton Height* Master Carton Width/1728 * No of Cartons
+Estimated Pallets  = Cubic Ft / (40 * 48 * Max Pallet Height /1728) ---> rounds to next integer value
+'Max Pallet Height'  should be configurable from 'Prep Center /Warehouse' and Settings-->General
+```
+**Mass Adjust Tariff**
+The Tariff can be calculated while uploading Mass Adjust file in the following steps
+1. Download Template
+Using this template, we can give the inputs for calculating tariff for the given SKU. The SKU/Model number can be given as an Identifier
+2. Upload Adjustment File
+The SKU with the values given in the file will get filled in the UI. The values get filled only if those SKUs are already present in the UI
 
-- Add Invoice button generate an invoice details entering region.
+**View Total Tariff By HTS Code**
+Helps to view the tariff cost based on the HTS code used in the import shipment. This view contains 6 columns such as HTS code, Tariff %, Total Reported Value, Tariff Costs, MPF(Merchandise Processing Fee), HMF(Harbor Maintenance Fee) and Total Tariff Costs
+Tariff % is based on the Tariff code ie The latest Tariff code modified before the Inventory-->ETA
+```sh
+Tariff Costs = Sum of Tariff Costs for a HTS code(Tariff Cost for single SKU row = Total Reported Value * Tariff %)
+MPF = .3464 % of Total Reported Value
+HMF = .125 % of Total Reported Value
 
-- Invoice type can be selected from the drop down . Invoice number field keep the invoice number. The amount field collects the amount specified in the invoice for the shipment.
+If the file is provided only Reported Unit Value then
+Reported Total Value = Reported Unit Value  * Total Unit Quantity
+Total Tariff Costs = Tariff Costs + MPF + HMF
+```
+Following are the different scenarios for calculating Total Tariff and Reported Value while uploading the mass adjust file. 
 
-- Currency field is a country dependent drop down that selects the currency type.
+- When the identfier(SKU/Model Number) repeats in mass adjust file
 
-- Invoice number, currency and amount fields are mandatory fields.
+	1. Sum the Reported Total Value for the repeated SKU/Model Number for a container and round it to an integer value. 
+	
+	2. Find the Total Tariff costs based on the Total Reported value
 
-- Invoice date field keep the date on which the invoice is created.Due date field keep the deadline date on which the payment mentioned in the invoice to be done.
+	3. Find SKU1's Reported Value % and SKU2's Reported Value % as follows,
+	SKU1's Reported Value% = SKU1's Reported Val / (SKU1's Reported Val + SKU2's Reported Val)
+	SKU1's Total tariff = Total Tariff * SKU1's Reported Value %	
 
-- In Payment date field the actual date on which the payment was done is given.
+- When the Identifier(SKU/Model Number) repeats in UI- Container(Same SKU from different PO)
 
-- If more than one invoice type details to be given then this invoice region can be replicated by clicking on the plus button on the boundary of the region.
+    Read Total Reported Value for a SKU from Mass adjust file and distribute among these repeated SKUs in a container based on its Total Unit Qty and find the Total Tariff costs based on the distributed Total Reported Value
 
-![](https://i.ibb.co/g9W4Jdv/invoice.jpg)
+Note: In either of the above case the HTS code should be same for all the repeated SKUs/Model Number. Else the Error message should be displayed to the user
 
-- Import shipment details window gives the shipment details in appropriate text fields.
+**Export IS Document**
+The SKU details of an import shipment can be exported as a document which contains all SKUs and all the fields with its values comes in the SKU row
 
-In the top right corner one label called ID is placed which indicates the identifier of a particular import shipment(IS).
+**Cost Detail**
+The cost details of the Import Shipment can be exported as a document/report
+The report contains top rows such as
+1. Pegged Rate
+2. Current Rate
+3. Manufacturer's Discount
+4. HBL
+5. Container's ID
 
-#Create WH Import file 
+Then the report contains details for,
 
-- Helps to generate a warehouse import file as per the template that has been mentioned in the 'Import Template' icon of Warehouse/3PL page under Administration menu.
+1. SKU
+2. Model
+3. Description
+4. Number of Cartons
+5. Eaches Per Carton
+6. Total Eaches
+7. Manufacture Cost --> po. manufacturecost
+8. Total Cost = manufacture cost * total eaches
+9. Pegged Rate Cost = total cost * pegged rate (2 decimal places rounded)
+10. Current Rate Cost = pegged rate cost * 1/current rate(2 decimal places rounded)
+11. Cost After Discount = current rate cost - [current rate cost * manufacturers discount rate]
 
-- The fields of the templates are flexible and it can be added as per the requirement.For a particular warehouse if template is not defined an error message will be raised while clicking on the create WH Import file button saying, Preparation Center Template is not available.
+Summary rows are, 
 
-- 
+1. Manufacturers Shipping Cost = Container.manufacturing shipping cost
+2. Grand Total  = Cost After Discount + Manufacturers Shipping Cost
 
+**Create Warehouse/3PL Invoice**
+Warehouse preparation cost be added from IS using this button which navigates the user directly to the Warehouse/3PL Invoice page
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+**Create WH Import File**
+Helps to create a document of list of SKUs to send to a particular warehouse based on the selected warehouses template. By default the warehouse selected in the popup will be the same given in the import shipment page
